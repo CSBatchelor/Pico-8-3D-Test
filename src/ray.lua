@@ -28,15 +28,18 @@ ray = setmetatable(
         draw3d = function(_ENV)
             linHeight = 127 / perpWallDist
             drawStart = -linHeight / 2 + 64
-            if drawStart < 0 then drawStart = 0 end
-            drawEnd = linHeight / 2 + 64
-            if drawEnd >= 127 then drawEnd = 127 end
             if side == 0 then
-                color = 8
+                wallX = (owningEntity.posY + perpWallDist * dirY)
             else
-                color = 12
+                wallX = (owningEntity.posX + perpWallDist * dirX)
             end
-            line(x, drawStart, x, drawEnd, color)
+
+            wallX -= flr(wallX)
+            texX = flr(wallX * 8)
+            sprx = mget(mapX, mapY) % 16 * 8 + texX
+            spry = flr(mget(mapX, mapY) / 16) * 8
+
+            sspr(sprx, spry, 1, 8, x, drawStart, 1, linHeight)
         end,
         doRaycast = function(_ENV)
             dirX = owningEntity.dirX + owningEntity.planeX * cameraX
