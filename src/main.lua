@@ -40,10 +40,6 @@ function _getDeltaTime()
     return 1 / target_fps
 end
 
-function _raycast(x)
-    ray:doRaycast()
-end
-
 function _draw2d()
     cls()
     map(0, 0, 0, 0, 16, 16)
