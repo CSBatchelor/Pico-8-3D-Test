@@ -64,8 +64,13 @@ function drawHorizon()
 end
 
 function doPlayerMove(dt)
-    if btn(0) then player:move(player.enMoveType.rotateLeft, dt) end
-    if btn(1) then player:move(player.enMoveType.rotateRight, dt) end
+    if not btn(5) then
+        if btn(0) then player:move(player.enMoveType.rotateLeft, dt) end
+        if btn(1) then player:move(player.enMoveType.rotateRight, dt) end
+    else
+        if btn(0) then player:move(player.enMoveType.moveLeft, dt) end
+        if btn(1) then player:move(player.enMoveType.moveRight, dt) end
+    end
     if btn(2) then player:move(player.enMoveType.moveForward, dt) end
     if btn(3) then player:move(player.enMoveType.moveBackward, dt) end
 end

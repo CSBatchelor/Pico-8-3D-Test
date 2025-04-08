@@ -24,8 +24,10 @@ entity = setmetatable(
         enMoveType = {
             rotateLeft = 0,
             rotateRight = 1,
-            moveForward = 2,
-            moveBackward = 3
+            moveLeft = 2,
+            moveRight = 3,
+            moveForward = 4,
+            moveBackward = 5
         },
         move = function(_ENV, moveType, dt)
             if moveType == enMoveType.rotateLeft then
@@ -46,6 +48,34 @@ entity = setmetatable(
                 local oldPlaneX = planeX
                 planeX = planeX * cos(-rotationSpeed * dt) - planeY * sin(-rotationSpeed * dt)
                 planeY = oldPlaneX * sin(-rotationSpeed * dt) + planeY * cos(-rotationSpeed * dt)
+            end
+
+            if moveType == enMoveType.moveLeft then
+                local nextMapX = flr((posX + dirY * moveSpeed * dt))
+                if mget(nextMapX, mapY) == 0 then
+                    posX += dirY * moveSpeed * dt
+                    mapX = nextMapX
+                end
+
+                local nextMapY = flr((posY - dirX * moveSpeed * dt))
+                if mget(mapX, nextMapY) == 0 then
+                    posY -= dirX * moveSpeed * dt
+                    mapY = nextMapY
+                end
+            end
+
+            if moveType == enMoveType.moveRight then
+                local nextMapX = flr((posX - dirY * moveSpeed * dt))
+                if mget(nextMapX, mapY) == 0 then
+                    posX -= dirY * moveSpeed * dt
+                    mapX = nextMapX
+                end
+
+                local nextMapY = flr((posY + dirX * moveSpeed * dt))
+                if mget(mapX, nextMapY) == 0 then
+                    posY += dirX * moveSpeed * dt
+                    mapY = nextMapY
+                end
             end
 
             if moveType == enMoveType.moveForward then
