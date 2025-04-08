@@ -30,8 +30,14 @@ ray = setmetatable(
             drawStart = -linHeight / 2 + 64
             if side == 0 then
                 wallX = (owningEntity.posY + perpWallDist * dirY)
+                if dirX < 0 then
+                    wallX = 8 - wallX
+                end
             else
-                wallX = (owningEntity.posX + perpWallDist * dirX)
+                wallX = 8 - (owningEntity.posX + perpWallDist * dirX)
+                if dirY < 0 then
+                    wallX = 8 - wallX
+                end
             end
 
             wallX -= flr(wallX)
