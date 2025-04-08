@@ -24,9 +24,14 @@ entity = setmetatable(
             -- Line, representing the entity facing direction
             line(posX * 8, posY * 8, posX * 8 + dirX * 4, posY * 8 + dirY * 4, 12)
         end,
-        move = function(_ENV, dt)
-            -- Rotate right
-            if btn(0) then
+        enMoveType = {
+            rotateLeft = 0,
+            rotateRight = 1,
+            moveForward = 2,
+            moveBackward = 3
+        },
+        move = function(_ENV, moveType, dt)
+            if moveType == enMoveType.rotateLeft then
                 local oldDirX = dirX
                 dirX = dirX * cos(rotationSpeed * dt) - dirY * sin(rotationSpeed * dt)
                 dirY = oldDirX * sin(rotationSpeed * dt) + dirY * cos(rotationSpeed * dt)
@@ -36,8 +41,7 @@ entity = setmetatable(
                 planeY = oldPlaneX * sin(rotationSpeed * dt) + planeY * cos(rotationSpeed * dt)
             end
 
-            -- Rotate left
-            if btn(1) then
+            if moveType == enMoveType.rotateRight then
                 local oldDirX = dirX
                 dirX = dirX * cos(-rotationSpeed * dt) - dirY * sin(-rotationSpeed * dt)
                 dirY = oldDirX * sin(-rotationSpeed * dt) + dirY * cos(-rotationSpeed * dt)
@@ -47,8 +51,7 @@ entity = setmetatable(
                 planeY = oldPlaneX * sin(-rotationSpeed * dt) + planeY * cos(-rotationSpeed * dt)
             end
 
-            -- Move forward
-            if btn(2) then
+            if moveType == enMoveType.moveForward then
                 local nextMapX = flr((posX + dirX * moveSpeed * dt))
                 if mget(nextMapX, mapY) == 0 then
                     posX += dirX * moveSpeed * dt
@@ -62,8 +65,7 @@ entity = setmetatable(
                 end
             end
 
-            -- Move backward
-            if btn(3) then
+            if moveType == enMoveType.moveBackward then
                 local nextMapX = flr((posX - dirX * moveSpeed * dt))
                 if mget(nextMapX, mapY) == 0 then
                     posX -= dirX * moveSpeed * dt
@@ -105,7 +107,7 @@ end
 
 function _update60()
     dt = _getDeltaTime()
-    player:move(dt)
+    doPlayerMove(dt)
 
     for ray in all(rays) do
         ray:doRaycast()
@@ -142,6 +144,13 @@ end
 function drawHorizon()
     rectfill(0, 0, 127, 64, 1)
     rectfill(0, 64, 127, 127, 5)
+end
+
+function doPlayerMove(dt)
+    if btn(0) then player:move(player.enMoveType.rotateLeft, dt) end
+    if btn(1) then player:move(player.enMoveType.rotateRight, dt) end
+    if btn(2) then player:move(player.enMoveType.moveForward, dt) end
+    if btn(3) then player:move(player.enMoveType.moveBackward, dt) end
 end
 ray = setmetatable(
     {
@@ -285,3 +294,18 @@ __map__
 0100000100000100000100000100000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0100000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0101010101010101010101010101010100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

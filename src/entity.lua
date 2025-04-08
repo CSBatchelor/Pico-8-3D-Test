@@ -21,9 +21,14 @@ entity = setmetatable(
             -- Line, representing the entity facing direction
             line(posX * 8, posY * 8, posX * 8 + dirX * 4, posY * 8 + dirY * 4, 12)
         end,
-        move = function(_ENV, dt)
-            -- Rotate right
-            if btn(0) then
+        enMoveType = {
+            rotateLeft = 0,
+            rotateRight = 1,
+            moveForward = 2,
+            moveBackward = 3
+        },
+        move = function(_ENV, moveType, dt)
+            if moveType == enMoveType.rotateLeft then
                 local oldDirX = dirX
                 dirX = dirX * cos(rotationSpeed * dt) - dirY * sin(rotationSpeed * dt)
                 dirY = oldDirX * sin(rotationSpeed * dt) + dirY * cos(rotationSpeed * dt)
@@ -33,8 +38,7 @@ entity = setmetatable(
                 planeY = oldPlaneX * sin(rotationSpeed * dt) + planeY * cos(rotationSpeed * dt)
             end
 
-            -- Rotate left
-            if btn(1) then
+            if moveType == enMoveType.rotateRight then
                 local oldDirX = dirX
                 dirX = dirX * cos(-rotationSpeed * dt) - dirY * sin(-rotationSpeed * dt)
                 dirY = oldDirX * sin(-rotationSpeed * dt) + dirY * cos(-rotationSpeed * dt)
@@ -44,8 +48,7 @@ entity = setmetatable(
                 planeY = oldPlaneX * sin(-rotationSpeed * dt) + planeY * cos(-rotationSpeed * dt)
             end
 
-            -- Move forward
-            if btn(2) then
+            if moveType == enMoveType.moveForward then
                 local nextMapX = flr((posX + dirX * moveSpeed * dt))
                 if mget(nextMapX, mapY) == 0 then
                     posX += dirX * moveSpeed * dt
@@ -59,8 +62,7 @@ entity = setmetatable(
                 end
             end
 
-            -- Move backward
-            if btn(3) then
+            if moveType == enMoveType.moveBackward then
                 local nextMapX = flr((posX - dirX * moveSpeed * dt))
                 if mget(nextMapX, mapY) == 0 then
                     posX -= dirX * moveSpeed * dt

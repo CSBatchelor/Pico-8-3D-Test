@@ -24,7 +24,7 @@ end
 
 function _update60()
     dt = _getDeltaTime()
-    player:move(dt)
+    doPlayerMove(dt)
 
     for ray in all(rays) do
         ray:doRaycast()
@@ -61,4 +61,11 @@ end
 function drawHorizon()
     rectfill(0, 0, 127, 64, 1)
     rectfill(0, 64, 127, 127, 5)
+end
+
+function doPlayerMove(dt)
+    if btn(0) then player:move(player.enMoveType.rotateLeft, dt) end
+    if btn(1) then player:move(player.enMoveType.rotateRight, dt) end
+    if btn(2) then player:move(player.enMoveType.moveForward, dt) end
+    if btn(3) then player:move(player.enMoveType.moveBackward, dt) end
 end
